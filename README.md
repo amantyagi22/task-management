@@ -35,3 +35,14 @@ A sleek and modern task management application built with Next.js 14, featuring 
 - **Styling**: Tailwind CSS
 - **Icons**: Heroicons
 - **Type Safety**: TypeScript, GraphQL Codegen
+
+
+## 📸 Screenshots
+
+![Home Page](./public/screenshots/home-page.png)
+![Add Task](./public/screenshots/add-task.png)
+![Edit Task](./public/screenshots/edit-task.png)
+![Task List](./public/screenshots/task-list.png)
+![Delete Task](./public/screenshots/delete-task.png)
+
+
