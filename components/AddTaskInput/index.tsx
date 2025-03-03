@@ -8,13 +8,17 @@ import { CREATE_TASK } from "@/graphql/query/task";
 
 const AddTaskInput = () => {
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: async (title: string) => {
+    mutationFn: async ({ title, description }: { title: string; description: string }) => {
       try {
-        const response = await graphqlClient.request(CREATE_TASK, { title });
+        const response = await graphqlClient.request(CREATE_TASK, { 
+          title, 
+          description: description || ''
+        });
         return response.createTask;
       } catch (error) {
         console.error('GraphQL request failed:', error);
@@ -24,6 +28,7 @@ const AddTaskInput = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       setTitle("");
+      setDescription("");
       setError(null);
     },
     onError: (error: Error) => {
@@ -36,29 +41,36 @@ const AddTaskInput = () => {
     e.preventDefault();
     setError(null);
     if (title.trim()) {
-      createMutation.mutate(title.trim());
+      createMutation.mutate({ title: title.trim(), description: description.trim() });
     }
   };
 
   return (
     <div className="space-y-2">
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Add a new task..."
-          className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white text-gray-900 placeholder-gray-500"
+          placeholder="Task title..."
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white text-gray-900 placeholder-gray-500"
+        />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Task description (optional)..."
+          rows={3}
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white text-gray-900 placeholder-gray-500 resize-none"
         />
         <button 
           type="submit"
           disabled={createMutation.isPending}
-          className={`bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors font-semibold shadow-sm inline-flex items-center gap-2 ${
+          className={`bg-orange-300 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors font-semibold shadow-sm inline-flex items-center gap-2 self-end ${
             createMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
           <PlusIcon className="h-5 w-5" />
-          {createMutation.isPending ? 'Adding...' : 'Add'}
+          {createMutation.isPending ? 'Adding...' : 'Add Task'}
         </button>
       </form>
       {error && (

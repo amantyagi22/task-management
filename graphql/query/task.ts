@@ -5,6 +5,7 @@ export const GET_TASKS = graphql(`
     getTasks {
       id
       title
+      description
       completed
       createdAt
       updatedAt
@@ -13,13 +14,14 @@ export const GET_TASKS = graphql(`
 `);
 
 export const CREATE_TASK = graphql(`
-  mutation CreateTask($title: String!) {
-    createTask(title: $title) {
+  mutation CreateTask($title: String!, $description: String!) {
+    createTask(title: $title, description: $description) {
       success
       message
       task {
         id
         title
+        description
         completed
         createdAt
         updatedAt
@@ -29,13 +31,14 @@ export const CREATE_TASK = graphql(`
 `);
 
 export const UPDATE_TASK = graphql(`
-  mutation UpdateTask($id: ID!, $title: String, $completed: Boolean) {
-    updateTask(id: $id, title: $title, completed: $completed) {
+  mutation UpdateTask($id: ID!, $title: String, $description: String!, $completed: Boolean) {
+    updateTask(id: $id, title: $title, description: $description, completed: $completed) {
       success
       message
       task {
         id
         title
+        description
         completed
         createdAt
         updatedAt
